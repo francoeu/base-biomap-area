@@ -1,0 +1,22 @@
+
+
+.slider {
+  margin:0 10px;
+  overflow:"hidden";
+  padding:2rem 0;
+}
+
+
+
+.react-multi-carousel-list {
+padding: 0rem 0 2rem 0;
+}
+
+.custom-dot-list-style button{
+border: none;
+background: #292929;
+}
+.react-multi-carousel-dot.react-multi-carousel-dot--active button{
+background: #0FB268 !important;
+}
+

@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  password        String
+  name            String?
+  businessName    String?
+  avatarUrl       String?
+  isAdmin         Boolean          @default(false)
+  projects        UsersProjects[]
+  customerFolders CustomerFolder[]
+
+  @@map("users")
+}
+
+model CustomerFolder {
+  id           String  @id @default(uuid())
+  name         String
+  description  String?
+  businessName String?
+  customer     User    @relation(fields: [customerId], references: [id])
+  customerId   String
+
+  projects  Project[]
+  createdAt DateTime  @default(now())
+
+  @@map("folders")
+}
+
+model Project {
+  id               String          @id @default(uuid())
+  name             String
+  description      String?
+  businessName     String?
+  imageUrl         String?
+  userId           String?
+  customerFolder   CustomerFolder  @relation(fields: [customerFolderId], references: [id])
+  customerFolderId String
+  archives         Archive[]
+  createdAt        DateTime        @default(now())
+  UsersProjects    UsersProjects[]
+
+  @@map("projects")
+}
+
+model UsersProjects {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [fkUserId], references: [id])
+  project     Project  @relation(fields: [fkProjectId], references: [id])
+  fkUserId    String
+  fkProjectId String
+  createdAt   DateTime @default(now())
+
+  @@map("users_projects")
+}
+
+model Archive {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  archiveUrl  String
+  createdAt   DateTime @default(now())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+
+  @@map("archives")
+}
+
+model Subscriber {
+  id        String   @id @default(uuid())
+  firstName String?
+  lastName  String?
+  email     String
+  createdAt DateTime @default(now())
+
+  @@map("subscribers")
+}
